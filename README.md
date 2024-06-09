@@ -3,13 +3,7 @@
 <a name="readme-top"></a>
 
 ## About The Project
-The purpose of this project is to use Moveit2 in order to generate a basic Pick&Place task. This is, pick an object from the table and place it in a different location.
-
-In the first part of the project, you will have to set up and configure a MoveIt2 package for the UR3e robotic arm.
-
-Once MoveIt2 is properly configured, you will create a program in C++ that uses the Move Group Interface API to combine a series of motions in order to generate the pick & place sequence.
-
-Finally, you will add a Perception node to the pick & place sequence so that the robot is able to detect the position of the object to pick.
+The purpose of this project is to use Moveit2 to generate a basic Pick & Place task with a UR3e robotic arm. The task involves picking an object from the table and placing it in a different location. The Move Group Interface API is utilized to combine a series of motions to generate the pick & place sequence. Additionally, a perception node is integrated into the sequence to enable the robot to detect the position of the object to be picked.
 
 ![This is an image](images/preview.png)
 
@@ -18,8 +12,7 @@ Finally, you will add a Perception node to the pick & place sequence so that the
 
 ### Software Prerequisites
 * Ubuntu 22.04
-* ROS1 Noetic
-* ROS2 Galactic
+* ROS2 Humble
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -29,17 +22,12 @@ Finally, you will add a Perception node to the pick & place sequence so that the
 1. Clone the repo:
    ```sh
    cd ~ && \
-   git clone https://github.com/pvela2017/The-Construct-CheckPoint-6-Autonomous-Navigation
+   git clone https://github.com/pvela2017/The-Construct-CheckPoint-7-Manipulation-Perception
    ```
 2. Compile the simulation:
    ```sh
-   source /opt/ros/noetic/setup.bash && \
-   cd ~/The-Construct-CheckPoint-6-Autonomous-Navigation/simulation_ws && \
-   catkin_make && \
-   cd ~/The-Construct-CheckPoint-6-Autonomous-Navigation/catkin_ws && \
-   catkin_make && \
-   source /opt/ros/galactic/setup.bash && \
-   cd ~/The-Construct-CheckPoint-6-Autonomous-Navigation/ros2_ws && \
+   source /opt/ros/humble/setup.bash && \
+   cd ~/The-Construct-CheckPoint-7-Manipulation-Perception/ros2_ws && \
    colcon build
    ```
      
@@ -51,56 +39,44 @@ Finally, you will add a Perception node to the pick & place sequence so that the
 ### Local Simulation & Real Robot
 1. Launch the simulation:
    ```sh
-   source /opt/ros/noetic/setup.bash && \
-   source ~/The-Construct-CheckPoint-6-Autonomous-Navigation/simulation_ws/devel/setup.bash && \
-   roslaunch rb1_base_gazebo warehouse_rb1.launch
+   source /opt/ros/humble/setup.bash && \
+   source ~/The-Construct-CheckPoint-7-Manipulation-Perception/ros2_ws/install/setup.bash && \
+   ros2 launch the_construct_office_gazebo warehouse_ur3e.launch.xml
    ```
-2. Launch the ros bridge:
+2. Launch move group:
    ```sh
-   source /opt/ros/noetic/setup.bash && \
-   source ~/The-Construct-CheckPoint-6-Autonomous-Navigation/catkin_ws/devel/setup.bash && \
-   roslaunch load_params load_params.launch && \
-   source /opt/ros/galactic/setup.bash && \
-   ros2 run ros1_bridge parameter_bridge && \
+   source /opt/ros/humble/setup.bash && \
+   source ~/The-Construct-CheckPoint-7-Manipulation-Perception/ros2_ws/install/setup.bash && \
+   ros2 launch my_moveit_config move_group.launch.py    # simulation
+   ros2 launch real_moveit_config move_group.launch.py  # real
    ```
-3. Cartographer:
+3. Launch moveit rviz interface:
    ```sh
-   source /opt/ros/galactic/setup.bash && \
-   source ~/The-Construct-CheckPoint-6-Autonomous-Navigation/ros2_ws/install/setup.bash && \
-   ros2 launch cartographer_slam cartographer.launch.py
+   source /opt/ros/humble/setup.bash && \
+   source ~/The-Construct-CheckPoint-7-Manipulation-Perception/ros2_ws/install/setup.bash && \
+   ros2 launch my_moveit_config moveit_rviz.launch.py    # simulation
+   ros2 launch real_moveit_config moveit_rviz.launch.py  # real
    ```
-4. Mapping:
+4. Pick and Place without perception:
    ```sh
-   source /opt/ros/galactic/setup.bash && \
-   source ~/The-Construct-CheckPoint-6-Autonomous-Navigation/ros2_ws/install/setup.bash && \
-   ros2 launch map_server map_server.launch.py map_file:=warehouse_map_sim.yaml # simulation
-   ros2 launch map_server map_server.launch.py map_file:=warehouse_map_real.yaml # real
+   source /opt/ros/humble/setup.bash && \
+   source ~/The-Construct-CheckPoint-7-Manipulation-Perception/ros2_ws/install/setup.bash && \
+   ros2 launch moveit2_scripts pick_and_place_sim.launch.py    # simulation
+   ros2 launch moveit2_scripts pick_and_place.launch.py        # real
    ```
-5. Localization:
+6. Launch perception:
    ```sh
-   source /opt/ros/galactic/setup.bash && \
-   source ~/The-Construct-CheckPoint-6-Autonomous-Navigation/ros2_ws/install/setup.bash && \
-   ros2 launch localization_server localization.launch.py map_file:=warehouse_map_sim.yaml # simulation
-   ros2 launch localization_server localization.launch.py map_file:=warehouse_map_real.yaml # real
+   source /opt/ros/humble/setup.bash && \
+   source ~/The-Construct-CheckPoint-7-Manipulation-Perception/ros2_ws/install/setup.bash && \
+   ros2 launch get_cube_pose get_pose_client.launch.py    # simulation
+   ```   
+7. Pick and Place with perception:
+   ```sh
+   source /opt/ros/humble/setup.bash && \
+   source ~/The-Construct-CheckPoint-7-Manipulation-Perception/ros2_ws/install/setup.bash && \
+   ros2 launch moveit2_scripts pick_and_place_perception_sim.launch.py    # simulation
+   ros2 launch moveit2_scripts pick_and_place_perception.launch.py        # real
    ```
-6. Keyboard:
-   ```sh
-   ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args --remap cmd_vel:=/robot/cmd_vel
-   ```
-7. Path planner:
-   ```sh
-   source /opt/ros/galactic/setup.bash && \
-   source ~/The-Construct-CheckPoint-6-Autonomous-Navigation/ros2_ws/install/setup.bash && \
-   ros2 launch path_planner_server pathplanner.launch.py
-   ```
-8. API commander:
-   ```sh
-   source /opt/ros/galactic/setup.bash && \
-   source ~/The-Construct-CheckPoint-6-Autonomous-Navigation/ros2_ws/install/setup.bash && \
-   ros2 launch localization_server localization.launch.py && \
-   ros2 launch path_planner_server pathplanner.launch.py && \
-   python3 ~/ros2_ws/src/nav2_apps/scripts/move_shelf_to_ship.py
-   ```  
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -110,4 +86,5 @@ Finally, you will add a Perception node to the pick & place sequence so that the
 
 <!-- KEYS -->
 ## Key topics learnt
-* Keepout Mask.
+* Moveit2.
+* Perception.
