@@ -85,6 +85,6 @@ The purpose of this project is to use Moveit2 to generate a basic Pick & Place t
 [![Demo](https://img.youtube.com/vi/s4jkbh0bWyQ/0.jpg)](https://www.youtube.com/watch?v=s4jkbh0bWyQ)
 
 <!-- KEYS -->
-## Key topics learnt
+## Key Topics Learnt
 * Moveit2.
 * Perception.
