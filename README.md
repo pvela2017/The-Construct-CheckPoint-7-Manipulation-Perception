@@ -82,7 +82,7 @@ The purpose of this project is to use Moveit2 to generate a basic Pick & Place t
 
 <!-- RESULTS -->
 ## Results
-[![Demo](https://img.youtube.com/vi/s4jkbh0bWyQ/0.jpg)](https://www.youtube.com/watch?v=s4jkbh0bWyQ)
+[![Demo](https://img.youtube.com/vi/0wiNL_WK67I/0.jpg)](https://youtu.be/0wiNL_WK67I)
 
 <!-- KEYS -->
 ## Key Topics Learnt
